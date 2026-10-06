@@ -1,0 +1,24 @@
+# local state — created and owned by the agent each session
+memory/
+*.log
+
+# secrets — never commit
+*.pem
+*.key
+*.env
+.env.*
+.env
+!env.example
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# never commit anything that looks like an API key or token filename
+credentials/
+secrets/

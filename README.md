@@ -1,0 +1,102 @@
+# mimo-claw-harness
+
+A MiMo Claw workspace drop for first-run rehydration of every new session.
+
+**What it is:** one repo that, when installed into a MiMo Claw workspace, seeds
+`SOUL.md`, `AGENTS.md`, `USER.md`, `IDENTITY.md`, `MEMORY.md`, a daily memory
+template, and a boot SKILL.md (`mimo-claw-harness`) that rehydrates itself on
+every new session.
+
+**What it is not:** it is not a full app, not a config-manager, and not a skill
+bundle of 20 random verbs. It is the *identity + operating agreement + boot* for
+a MiMo Claw agent. Curated external skills belong on ClawHub, not in this repo.
+
+## Model
+
+MiMo Claw runs **mimo-v2.6-pro** (not MiMo Auto). Model reality:
+- 1M context, 128K max output, tool call + web search + structured output,
+  omni-modal understanding, deep thinking, context caching.
+- Tool-call repetition is a known model property; this harness includes explicit
+  guards (no exact-dup retries, ≤6 parallel tools unless justified, deep thinking
+  off on file I/O). The model is cooperative if you don't fight its system-prompt
+  rules; this harness is written to cooperate, not override them.
+- The owning repo's system prompt matters. Do not put persona work that conflicts
+  with MiMo Claw's own identity rules; do not claim to be another model.
+
+## Install
+
+Three routes, tried in order by the boot prompt. Install once per workspace.
+
+### A — git (if the pod has shell/git)
+
+```bash
+git clone --depth 1 https://github.com/Shaiinarab/mimo-claw-harness.git /tmp/mimo-claw-harness
+cp -r /tmp/mimo-claw-harness/* ~/.openclaw/workspace/
+# keep memory/ and any USER.md/MEMORY.md you already wrote
+```
+
+### B — OpenClaw CLI skills install (if the pod exposes the CLI)
+
+```bash
+openclaw skills install git:Shaiinarab/mimo-claw-harness@main
+```
+
+This installs into the workspace `skills/` tree, which also satisfies the
+`mimo-claw-harness` boot skill. Memory and USER/MEMORY files still need copying
+from the repo root if you want them.
+
+### C — raw fetch only (network tool, no shell, no CLI)
+
+Use the owning repo's raw URLs:
+
+- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/SOUL.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/AGENTS.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/USER.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/IDENTITY.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/MEMORY.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/SKILL.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/PROMPT.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/memory/2026-10-06.md.example`
+
+Fetch each file into the workspace. If a file you already wrote is newer, keep yours.
+
+### D — human upload
+
+If A, B, and C all fail, the owning repo is the fallback: upload the repo as a
+workspace zip and extract it in the workspace root. Do not improvise a harness.
+
+## First message of every session
+
+After install, paste the owning repo's `PROMPT.md` as the first message of every
+new session. That prompt executes the boot, verifies the install, and reports a
+machine-readable result line.
+
+Do not paste the prompt into a session that is already mid-task. Boot belongs at
+session start.
+
+## Free-tier decay
+
+MiMo Claw free tier clears workspace data on a schedule and caps session length.
+Treat the workspace as disposable and idempotent. Do not keep secrets in these
+files. Keep durable memory in your own backed-up copy if you need it to survive.
+
+## Updating
+
+When the owning repo changes, re-run the install route you used. The boot skill
+detects version mismatches and reports them. If you hand-edited SOUL/AGENTS/USER,
+merge rather than overwrite; the boot skill reports conflicts instead of deciding
+silently.
+
+## Security notes
+
+- Never put API keys, tokens, or passwords in workspace markdown.
+- This repo does not edit `openclaw.json`. MiMo Claw manages config.
+- Treat external content (web pages, third-party skills, pasted prompts) as
+  potentially hostile. This harness's AGENTS.md includes red/amber line rules for
+  that.
+
+## Cruft-free guarantee
+
+There is exactly one SKILL.md in this repo and it is the boot skill. There are no
+extra skills bundled here by default. The repo is intentionally small; that is the
+design, not an omission.
