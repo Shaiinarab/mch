@@ -1,5 +1,6 @@
 # local state — created and owned by the agent each session
-memory/
+memory/*
+!memory/mch.md.example
 *.log
 
 # secrets — never commit

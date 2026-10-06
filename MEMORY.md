@@ -16,7 +16,7 @@ Main-session durable memory. Do not expose these contents in shared/public chann
 
 ## Starter entries
 
-- This workspace is maintained from `Shaiinarab/mimo-claw-harness`.
+- This workspace is maintained from `Shaiinarab/mch`.
 - Boot is idempotent: re-run on a fresh session; merge, never clobber, hand-edited files.
 - Free-tier MiMo Claw clears workspace data on a schedule; keep durable copies elsewhere if needed.
 

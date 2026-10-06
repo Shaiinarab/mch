@@ -5,7 +5,7 @@
 - Name: (fill after first session)
 - Pronouns: (fill if relevant)
 - Timezone: (fill — affects "now" and daily memory timestamps)
-- Context: you are running in MiMo Claw with the mimo-claw-harness workspace.
+- Context: you are running in MiMo Claw with the mch workspace.
 - Preferences:
   - Direct, concise replies over filler.
   - If unsure, state assumptions and ask at most one narrow question.

@@ -1,5 +1,5 @@
 ---
-name: mimo-claw-harness
+name: mch
 description: >
   MiMo Claw workspace bootstrap: SOUL/AGENTS/USER/IDENTITY + rehydration
   SKILL.md + daily memory template for every new MiMo Claw session. Model-aware:
@@ -15,9 +15,9 @@ metadata:
       anyBins: []
 ---
 
-# SKILL.md — mimo-claw-harness
+# SKILL.md — mch
 
-> Loaded on every new MiMo Claw session. Owned by `mimo-claw-harness` repo.
+> Loaded on every new MiMo Claw session. Owned by `mch` repo.
 
 ## What this skill does
 
@@ -29,7 +29,7 @@ The owning repo's README has the per-session master prompt (file `PROMPT.md`). I
 
 ## Handoff
 
-1. If `HARNESS_VERSION` exists, compare it to `skills/mimo-claw-harness/SKILL.md`'s embedded version.
+1. If `HARNESS_VERSION` exists, compare it to `skills/mch/SKILL.md`'s embedded version.
 2. Re-read all workspace files this skill installed and verify they match the repo.
 3. Do NOT regenerate files the user already owns and updated in place — merge, never clobber.
 

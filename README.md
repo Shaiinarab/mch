@@ -1,11 +1,11 @@
-# mimo-claw-harness
+# mch
 
 A MiMo Claw workspace drop for first-run rehydration of every new session.
+Short name for the public repo at `github.com/Shaiinarab/mch`.
 
 **What it is:** one repo that, when installed into a MiMo Claw workspace, seeds
 `SOUL.md`, `AGENTS.md`, `USER.md`, `IDENTITY.md`, `MEMORY.md`, a daily memory
-template, and a boot SKILL.md (`mimo-claw-harness`) that rehydrates itself on
-every new session.
+template, and a boot SKILL.md (`mch`) that rehydrates itself on every new session.
 
 **What it is not:** it is not a full app, not a config-manager, and not a skill
 bundle of 20 random verbs. It is the *identity + operating agreement + boot* for
@@ -30,33 +30,35 @@ Three routes, tried in order by the boot prompt. Install once per workspace.
 ### A — git (if the pod has shell/git)
 
 ```bash
-git clone --depth 1 https://github.com/Shaiinarab/mimo-claw-harness.git /tmp/mimo-claw-harness
-cp -r /tmp/mimo-claw-harness/* ~/.openclaw/workspace/
+git clone --depth 1 https://github.com/Shaiinarab/mch.git /tmp/mch
+cp /tmp/mch/{SOUL,AGENTS,USER,IDENTITY,MEMORY,PROMPT}.md ~/.openclaw/workspace/
+mkdir -p ~/.openclaw/workspace/skills/mch
+cp /tmp/mch/SKILL.md ~/.openclaw/workspace/skills/mch/
 # keep memory/ and any USER.md/MEMORY.md you already wrote
 ```
 
 ### B — OpenClaw CLI skills install (if the pod exposes the CLI)
 
 ```bash
-openclaw skills install git:Shaiinarab/mimo-claw-harness@main
+openclaw skills install git:Shaiinarab/mch@main
 ```
 
 This installs into the workspace `skills/` tree, which also satisfies the
-`mimo-claw-harness` boot skill. Memory and USER/MEMORY files still need copying
+`mch` boot skill. Memory and USER/MEMORY files still need copying
 from the repo root if you want them.
 
 ### C — raw fetch only (network tool, no shell, no CLI)
 
 Use the owning repo's raw URLs:
 
-- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/SOUL.md`
-- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/AGENTS.md`
-- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/USER.md`
-- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/IDENTITY.md`
-- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/MEMORY.md`
-- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/SKILL.md`
-- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/PROMPT.md`
-- `https://raw.githubusercontent.com/Shaiinarab/mimo-claw-harness/main/memory/2026-10-06.md.example`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/SOUL.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/AGENTS.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/USER.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/IDENTITY.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/MEMORY.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/SKILL.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/PROMPT.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/memory/mch.md.example`
 
 Fetch each file into the workspace. If a file you already wrote is newer, keep yours.
 
