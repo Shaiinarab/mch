@@ -36,7 +36,10 @@ platform fit, not peer engineering.
 3. **Skill descriptions are trigger surfaces.** Only name/description are
    preloaded for skill discovery, so the boot skill's description now says when
    to load it (fresh session, missing/stale workspace, pasted boot prompt,
-   version check) instead of only what it contains.
+   version check) instead of only what it contains. Keep triggers narrow (name
+   the moment of use and the adjacent non-use case), third person, minimal
+   length — over-broad triggers fire at the wrong time (community guidance,
+   see `research-2026-10-11.md`).
 4. **Optional platform layers exist and should be named, not silently relied
    on:** dreaming (memory consolidation), active-memory (pre-reply recall),
    session hooks (`openclaw hooks enable session-memory`), and `openclaw doctor`

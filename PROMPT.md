@@ -13,7 +13,7 @@ STEP 1 — acquire (try in order, stop at the first route that works):
  A) shell/git available: git clone --depth 1 https://github.com/Shaiinarab/mch.git "${TMPDIR:-/tmp}/mch" (if the harness forbids /tmp, stage under <workspace>/.openclaw/tmp/mch instead), then run the idempotent installer:
     sh "${TMPDIR:-/tmp}/mch/install.sh" "${TMPDIR:-/tmp}/mch" ~/.openclaw/workspace
     It preserves USER.md/MEMORY.md/hand-edited files, reports conflicts, and is safe to re-run.
- B) openclaw CLI available: openclaw skills install git:Shaiinarab/mch@main, then fetch the root workspace files (SOUL.md, AGENTS.md, USER.md, IDENTITY.md, MEMORY.md, PROMPT.md) from raw.githubusercontent.com into ~/.openclaw/workspace/.
+ B) openclaw CLI available: openclaw skills install git:Shaiinarab/mch@main, then fetch the root workspace files (SOUL.md, AGENTS.md, USER.md, IDENTITY.md, MEMORY.md, PROMPT.md, BOOTSTRAP.md, HARNESS_VERSION) from raw.githubusercontent.com into ~/.openclaw/workspace/, and ensure skills/mch/{SKILL.md,doctor.sh,install.sh} exist (fetch the missing ones from raw too).
  C) network/raw-fetch only: fetch each needed path from
     https://raw.githubusercontent.com/Shaiinarab/mch/main/<path>
     into ~/.openclaw/workspace/.
@@ -41,9 +41,13 @@ STEP 4 — adopt: read SOUL.md and AGENTS.md now and follow them for the rest of
 STEP 5 — reply with exactly this block and nothing else:
 BOOT <OK|PARTIAL|FAIL> v<ver> route=<A|B|C|D>
 skills: <n> [<names>]
-files: <n> written / <n> merged / <n> skipped
+files: <n> written / <n> merged / <n> skipped / <n> conflicts
 gaps: <blocked step + reason, one line each>
 Then wait for my task.
+
+Report field meanings: written = created or refreshed; merged = judgment-file
+text combined by hand (0 when install.sh ran alone); skipped = already correct;
+conflicts = judgment files kept as-is, still awaiting a merge decision.
 
 Hard rules: idempotent (re-running must not duplicate or corrupt files); zero clarifying
 questions; keep model thinking lean for file I/O; keep Xiaomi/MiMo identity intact and never

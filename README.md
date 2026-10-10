@@ -38,7 +38,7 @@ MiMo Claw runs **mimo-v2.6-pro** (not MiMo Auto). Model reality:
 
 ## Install
 
-Three routes, tried in order by the boot prompt. Install once per workspace.
+Four routes, tried in order by the boot prompt. Install once per workspace.
 
 ### A — git (if the pod has shell/git)
 
@@ -51,7 +51,8 @@ sh "${TMPDIR:-/tmp}/mch/install.sh" "${TMPDIR:-/tmp}/mch" ~/.openclaw/workspace
 skills/mch/*) are mirrored on every run; SOUL/AGENTS/USER/IDENTITY/MEMORY and
 `.learnings/` are written only when absent — a differing existing file is never
 overwritten, only reported as a conflict for a judgment merge. It prints one
-`INSTALL <OK|PARTIAL> version=<v> written=<n> skipped=<n> conflicts=<n>` line.
+`INSTALL <OK|PARTIAL> version=<v> written=<n> skipped=<n> conflicts=<n>` line. Exit 0 on OK/PARTIAL (conflicts are informational), 1 on
+FAIL (unwritable target, empty version, missing repo files).
 
 Manual route (no script execution): copy the same manifest yourself —
 `{SOUL,AGENTS,USER,IDENTITY,MEMORY,PROMPT,BOOTSTRAP}.md` + `HARNESS_VERSION` to
@@ -67,8 +68,9 @@ openclaw skills install git:Shaiinarab/mch@main
 ```
 
 This installs into the workspace `skills/` tree, which also satisfies the
-`mch` boot skill. Memory and USER/MEMORY files still need copying
-from the repo root if you want them.
+`mch` boot skill. The workspace root files still need copying from the repo
+(SOUL/AGENTS/USER/IDENTITY/MEMORY/PROMPT/BOOTSTRAP + `HARNESS_VERSION`); if you
+also fetch `install.sh`, one run of it covers the whole manifest.
 
 ### C — raw fetch only (network tool, no shell, no CLI)
 
@@ -84,6 +86,7 @@ Use the owning repo's raw URLs:
 - `https://raw.githubusercontent.com/Shaiinarab/mch/main/BOOTSTRAP.md`
 - `https://raw.githubusercontent.com/Shaiinarab/mch/main/HARNESS_VERSION`
 - `https://raw.githubusercontent.com/Shaiinarab/mch/main/doctor.sh`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/install.sh`
 - `https://raw.githubusercontent.com/Shaiinarab/mch/main/memory/mch.md.example`
 
 Fetch each file into the workspace (`SKILL.md` and `doctor.sh` go to
@@ -123,6 +126,11 @@ sh doctor.sh ./some-workspace                        # check an explicit directo
 It checks required root files, boot-skill frontmatter, and that `HARNESS_VERSION`
 matches the `harness-version` embedded in `SKILL.md`, then prints one
 machine-readable line: `DOCTOR <OK|PARTIAL|FAIL> version=<v> files=<n> gaps=<n> warns=<n>`.
+It also warns (never fails) on stale `BOOTSTRAP.md`, a stray root `SKILL.md`,
+secret-looking strings, and hidden/bidi characters in scanned markdown. With the
+CLI available, `openclaw memory promote` previews ranked distill candidates
+(dry-run; `--apply` writes) and `openclaw memory status --deep` probes recall
+health — hand distilling stays the default.
 Platform-level health is separate: `openclaw doctor` (extra workspaces,
 truncation, config) is the operator's check; `doctor.sh` is this harness's check.
 
@@ -134,6 +142,10 @@ choice and this repo never edits it:
 - **dreaming** — opt-in background memory consolidation into `MEMORY.md` + `DREAMS.md`
 - **active-memory** — opt-in pre-reply memory recall plugin
 - **session hooks** — e.g. `openclaw hooks enable session-memory` for `/new` snapshots
+- **commitments** — opt-in inferred check-ins (not reminders; exact reminder
+  requests still go to the scheduler)
+- **context-engine plugin slot** — a broken `plugins.slots.contextEngine` fails
+  every run with no auto-fallback; it is config territory, not this repo's
 
 See `docs/openclaw-fit.md` for the research behind the file split and memory model.
 
@@ -190,3 +202,6 @@ what to do about it.
 There is exactly one SKILL.md in this repo and it is the boot skill. There are no
 extra skills bundled here by default. `doctor.sh` is a verifier script, not a
 skill. The repo is intentionally small; that is the design, not an omission.
+If a skill ever grows past one workflow, its SKILL.md becomes a router to
+supporting files (keep it under ~500 lines); exact-command form is reserved for
+fragile, doctor.sh-style operations.

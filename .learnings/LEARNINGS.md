@@ -251,3 +251,37 @@ reporting, version lockstep), wired into PROMPT.md route A and README.
 - Last-Seen: 2026-10-10
 
 ---
+
+## [LRN-20261011-001] best_practice
+
+**Logged**: 2026-10-11T00:45:00+08:00
+**Priority**: high
+**Status**: promoted
+**Area**: infra
+
+### Summary
+"Prose-only mechanics" recurred a third time across tasks (verify without tool,
+install/idempotency without script, contracts like one-SKILL.md/BOOTSTRAP-cleanup
+without checks) — promotion threshold met.
+
+### Details
+Multi-agent QA audit found prose contracts unverified (duplicate SKILL.md
+ignored, BOOTSTRAP never checked, report counts no emitter) plus 6 script
+defects. Same defect class as LRN-20261010-004 and LRN-20261010-007.
+
+### Suggested Action
+Promoted as AGENTS.md Defensive pattern #9 ("context files are context, not
+enforcement; unconditional rules get mechanical gates"). Fixes landed in
+v0.6.0; record in docs/research-2026-10-11.md.
+
+### Metadata
+- Source: conversation (multi-agent QA)
+- Related Files: AGENTS.md, install.sh, test.sh, doctor.sh, docs/research-2026-10-11.md
+- Tags: prose-only-mechanics, hardening
+- See Also: LRN-20261010-004, LRN-20261010-007
+- Pattern-Key: harden.prose_only_mechanics
+- Recurrence-Count: 3
+- First-Seen: 2026-10-10
+- Last-Seen: 2026-10-11
+
+---

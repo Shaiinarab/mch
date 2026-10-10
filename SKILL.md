@@ -7,7 +7,7 @@ description: >
   or stale, the user pastes the boot prompt (PROMPT.md), or a harness version
   check is needed. Install by git clone, raw fetch, or openclaw skills install.
 user-invocable: true
-harness-version: 0.5.0
+harness-version: 0.6.0
 metadata:
   openclaw:
     requires:

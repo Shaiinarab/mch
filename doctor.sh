@@ -16,7 +16,11 @@
 #   3. SKILL.md YAML frontmatter has name + description
 #   4. HARNESS_VERSION matches the harness-version embedded in SKILL.md
 #   5. memory template present (repo layout only)
-#   6. no secret-looking strings in tracked markdown (warn only)
+#   6. no secret-looking strings in scanned markdown (root, skills/mch, docs,
+#      memory) — warn only
+#   7. no hidden/bidi/control characters in scanned markdown — warn only
+#   8. no stale BOOTSTRAP.md or stray root SKILL.md in installed workspaces —
+#      warn only
 #
 # Output: one "ok:/warn:/gap:" line per check, then a single machine-readable
 # summary line: DOCTOR <OK|PARTIAL|FAIL> version=<v> files=<n> gaps=<n> warns=<n>
@@ -49,20 +53,42 @@ echo "mch doctor -- target: $ROOT"
 
 # --- 1. required root files --------------------------------------------------
 missing=0
-for f in SOUL.md AGENTS.md USER.md IDENTITY.md MEMORY.md PROMPT.md BOOTSTRAP.md HARNESS_VERSION; do
+present=0
+for f in SOUL.md AGENTS.md USER.md IDENTITY.md MEMORY.md PROMPT.md HARNESS_VERSION; do
     if [ -f "$ROOT/$f" ]; then
         ok "root file $f"
+        present=$((present + 1))
     else
         gap "root file missing: $f"
         missing=$((missing + 1))
     fi
 done
 
+# BOOTSTRAP.md lifecycle: required in repo layout; in installed workspaces its
+# ABSENCE is the healthy state (first-run starter consumed per AGENTS.md).
+if [ -f "$ROOT/skills/mch/SKILL.md" ]; then
+    if [ -f "$ROOT/BOOTSTRAP.md" ]; then
+        warn "BOOTSTRAP.md still present in installed workspace (first run not completed?)"
+    else
+        ok "first-run starter consumed (BOOTSTRAP.md absent)"
+    fi
+    present=$((present + 1))
+elif [ -f "$ROOT/BOOTSTRAP.md" ]; then
+    ok "root file BOOTSTRAP.md"
+    present=$((present + 1))
+else
+    gap "root file missing: BOOTSTRAP.md"
+    missing=$((missing + 1))
+fi
+
 # --- 2. boot skill location --------------------------------------------------
 SKILL=""
 if [ -f "$ROOT/skills/mch/SKILL.md" ]; then
     SKILL="$ROOT/skills/mch/SKILL.md"
     ok "boot skill at skills/mch/SKILL.md (installed layout)"
+    if [ -f "$ROOT/SKILL.md" ]; then
+        warn "stray root SKILL.md (repo-layout leftover); skills/mch/SKILL.md is authoritative"
+    fi
 elif [ -f "$ROOT/SKILL.md" ]; then
     SKILL="$ROOT/SKILL.md"
     ok "boot skill at SKILL.md (repo layout)"
@@ -110,19 +136,40 @@ else
     warn "memory template memory/mch.md.example not found"
 fi
 
-# --- 6. secret scan (warn only) ----------------------------------------------
+# --- 6. content scans (warn only) ---------------------------------------------
+scan_md() {
+    for d in "$ROOT" "$ROOT/skills/mch" "$ROOT/docs" "$ROOT/memory"; do
+        [ -d "$d" ] || continue
+        for f in "$d"/*.md; do
+            [ -f "$f" ] && printf '%s\n' "$f"
+        done
+    done
+}
+
 if command -v grep >/dev/null 2>&1; then
-    hits=$(grep -l -E 'BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|((api|access|auth)[_-]?key|secret|token|password)[[:space:]]*[:=][[:space:]]*[^[:space:]]' \
-        "$ROOT"/*.md 2>/dev/null | tr '\n' ' ')
+    hits=$(scan_md | while IFS= read -r f; do
+        grep -l -E 'BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|((api|access|auth)[_-]?key|secret|token|password)[[:space:]]*[:=][[:space:]]*[^[:space:]]' "$f" 2>/dev/null
+    done | tr '\n' ' ')
     if [ -n "$hits" ]; then
         warn "secret-looking strings in: $hits"
     else
-        ok "no secret-looking strings in root markdown"
+        ok "no secret-looking strings in scanned markdown"
+    fi
+
+    # invisible characters: zero-width, bidi controls, BOM, soft hyphen, C0s
+    inv=$(printf '[\001\002\003\004\005\006\007\010\013\014\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037\177]|\342\200\213|\342\200\214|\342\200\215|\342\200\216|\342\200\217|\342\200\252|\342\200\253|\342\200\254|\342\200\255|\342\200\256|\342\201\246|\342\201\247|\342\201\250|\342\201\251|\357\273\277|\302\255')
+    bad=$(scan_md | while IFS= read -r f; do
+        LC_ALL=C grep -l -E "$inv" "$f" 2>/dev/null
+    done | tr '\n' ' ')
+    if [ -n "$bad" ]; then
+        warn "hidden/bidi/control characters in: $bad"
+    else
+        ok "no hidden characters in scanned markdown"
     fi
 fi
 
 # --- summary -----------------------------------------------------------------
-files=$((8 - missing))
+files=$((present))
 if [ "$gaps" -gt 0 ]; then
     status=FAIL
     [ "$missing" -lt 8 ] && [ -n "$SKILL" ] && status=PARTIAL
