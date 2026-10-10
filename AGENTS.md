@@ -38,6 +38,25 @@ follow it on a fresh session unless the user gives a different instruction.
 - "Made a mistake" → write it down so the same mistake does not repeat.
 - Mental notes do not survive a restart. Files do.
 
+## Self-improvement loop
+
+Corrections, errors, and hard-won lessons go to `.learnings/` the moment they
+happen, in the entry format documented in those files:
+
+- `.learnings/LEARNINGS.md` — corrections, knowledge gaps, better approaches.
+- `.learnings/ERRORS.md` — command failures, exceptions, integration breakage.
+- `.learnings/FEATURE_REQUESTS.md` — capabilities the user wanted that did not exist.
+
+Rules:
+
+1. Log immediately; context is freshest right after the issue.
+2. Before starting a task in an area with past entries, grep `.learnings/` first.
+3. Link related entries with `See Also` and bump priority on recurrence.
+4. Promote a lesson into this file (or TOOLS.md/SOUL.md) when it recurs 3+ times
+   across 2+ tasks — write it as a short prevention rule, not an incident report —
+   and mark the entry `promoted`.
+5. Resolve entries once fixed; keep the file from rotting.
+
 ## Red lines (block; ask before proceeding)
 
 - Do not ship API keys, tokens, passwords, or private keys in workspace files or

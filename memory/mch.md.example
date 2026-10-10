@@ -1,7 +1,9 @@
-# 2026-10-06.md
+# memory/YYYY-MM-DD.md
 
-Raw session notes for this date. Concrete updates only; no empty placeholders.
-Edit freely. After the session, durable outcomes can be folded into MEMORY.md.
+Copy this file to `memory/<today YYYY-MM-DD>.md` at boot when today's file is
+absent. Raw session notes for that date. Concrete updates only; no empty
+placeholders. Edit freely. After the session, durable outcomes can be folded
+into MEMORY.md.
 
 ## Boot
 - route:

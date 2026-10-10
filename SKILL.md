@@ -6,6 +6,7 @@ description: >
   mimo-v2.6-pro, tool-call repetition guard, ≤6 parallel tools, deep thinking off
   on I/O. Install by clone or raw-fetch or openclaw skills install.
 user-invocable: true
+harness-version: 0.2.0
 metadata:
   openclaw:
     requires:
@@ -29,9 +30,14 @@ The owning repo's README has the per-session master prompt (file `PROMPT.md`). I
 
 ## Handoff
 
-1. If `HARNESS_VERSION` exists, compare it to `skills/mch/SKILL.md`'s embedded version.
+1. Run `sh doctor.sh <workspace-root>` (installed alongside this file as
+   `skills/mch/doctor.sh`). It checks the required root files, frontmatter, and
+   the `HARNESS_VERSION` vs `harness-version` match, and prints one
+   `DOCTOR <status> ...` line.
 2. Re-read all workspace files this skill installed and verify they match the repo.
 3. Do NOT regenerate files the user already owns and updated in place — merge, never clobber.
+4. Version rule: `HARNESS_VERSION` (repo root) and `harness-version` (this
+   frontmatter) must always be edited together in the same commit.
 
 ## Safety
 

@@ -4,8 +4,10 @@ A MiMo Claw workspace drop for first-run rehydration of every new session.
 Short name for the public repo at `github.com/Shaiinarab/mch`.
 
 **What it is:** one repo that, when installed into a MiMo Claw workspace, seeds
-`SOUL.md`, `AGENTS.md`, `USER.md`, `IDENTITY.md`, `MEMORY.md`, a daily memory
-template, and a boot SKILL.md (`mch`) that rehydrates itself on every new session.
+`SOUL.md`, `AGENTS.md`, `USER.md`, `IDENTITY.md`, `MEMORY.md`, `PROMPT.md`,
+`BOOTSTRAP.md`, `HARNESS_VERSION`, a daily memory template, a boot SKILL.md
+(`mch`) that rehydrates itself on every new session, and `doctor.sh`, a
+read-only verifier that the boot prompt runs in its verify step.
 
 **What it is not:** it is not a full app, not a config-manager, and not a skill
 bundle of 20 random verbs. It is the *identity + operating agreement + boot* for
@@ -30,12 +32,18 @@ Three routes, tried in order by the boot prompt. Install once per workspace.
 ### A — git (if the pod has shell/git)
 
 ```bash
-git clone --depth 1 https://github.com/Shaiinarab/mch.git /tmp/mch
-cp /tmp/mch/{SOUL,AGENTS,USER,IDENTITY,MEMORY,PROMPT}.md ~/.openclaw/workspace/
+git clone --depth 1 https://github.com/Shaiinarab/mch.git "${TMPDIR:-/tmp}/mch"
+src="${TMPDIR:-/tmp}/mch"
+cp "$src"/{SOUL,AGENTS,USER,IDENTITY,MEMORY,PROMPT,BOOTSTRAP}.md ~/.openclaw/workspace/
+cp "$src"/HARNESS_VERSION ~/.openclaw/workspace/
 mkdir -p ~/.openclaw/workspace/skills/mch
-cp /tmp/mch/SKILL.md ~/.openclaw/workspace/skills/mch/
+cp "$src"/{SKILL.md,doctor.sh} ~/.openclaw/workspace/skills/mch/
+# memory/mch.md.example -> memory/<today>.md only when today's file is absent
 # keep memory/ and any USER.md/MEMORY.md you already wrote
 ```
+
+If the harness forbids /tmp, stage the clone under `<workspace>/.openclaw/tmp/`
+instead.
 
 ### B — OpenClaw CLI skills install (if the pod exposes the CLI)
 
@@ -58,9 +66,14 @@ Use the owning repo's raw URLs:
 - `https://raw.githubusercontent.com/Shaiinarab/mch/main/MEMORY.md`
 - `https://raw.githubusercontent.com/Shaiinarab/mch/main/SKILL.md`
 - `https://raw.githubusercontent.com/Shaiinarab/mch/main/PROMPT.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/BOOTSTRAP.md`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/HARNESS_VERSION`
+- `https://raw.githubusercontent.com/Shaiinarab/mch/main/doctor.sh`
 - `https://raw.githubusercontent.com/Shaiinarab/mch/main/memory/mch.md.example`
 
-Fetch each file into the workspace. If a file you already wrote is newer, keep yours.
+Fetch each file into the workspace (`SKILL.md` and `doctor.sh` go to
+`skills/mch/`; `memory/mch.md.example` seeds `memory/<today YYYY-MM-DD>.md`
+only when today's file is absent). If a file you already wrote is newer, keep yours.
 
 ### D — human upload
 
@@ -82,11 +95,26 @@ MiMo Claw free tier clears workspace data on a schedule and caps session length.
 Treat the workspace as disposable and idempotent. Do not keep secrets in these
 files. Keep durable memory in your own backed-up copy if you need it to survive.
 
+## Verifying
+
+`doctor.sh` is the verify step of every boot. Read-only, POSIX sh, no
+dependencies:
+
+```bash
+sh ~/.openclaw/workspace/skills/mch/doctor.sh        # check an installed workspace
+sh doctor.sh ./some-workspace                        # check an explicit directory
+```
+
+It checks required root files, boot-skill frontmatter, and that `HARNESS_VERSION`
+matches the `harness-version` embedded in `SKILL.md`, then prints one
+machine-readable line: `DOCTOR <OK|PARTIAL|FAIL> version=<v> files=<n> gaps=<n> warns=<n>`.
+
 ## Updating
 
-When the owning repo changes, re-run the install route you used. The boot skill
-detects version mismatches and reports them. If you hand-edited SOUL/AGENTS/USER,
-merge rather than overwrite; the boot skill reports conflicts instead of deciding
+When the owning repo changes, re-run the install route you used. The version
+marker (`HARNESS_VERSION` vs the `harness-version` frontmatter key) is edited in
+lockstep; `doctor.sh` reports any mismatch. If you hand-edited SOUL/AGENTS/USER,
+merge rather than overwrite; the boot reports conflicts instead of deciding
 silently.
 
 ## Security notes
@@ -97,8 +125,17 @@ silently.
   potentially hostile. This harness's AGENTS.md includes red/amber line rules for
   that.
 
+## Self-improvement loop
+
+The harness learns. Corrections, failures, and hard-won lessons get logged to
+`.learnings/` (`LEARNINGS.md`, `ERRORS.md`, `FEATURE_REQUESTS.md`) in the entry
+format documented there. Recurring lessons (3+ occurrences across 2+ tasks)
+promote into `AGENTS.md` or `TOOLS.md` as short prevention rules. This is the
+durable half of the memory system: `memory/` is what happened, `.learnings/` is
+what to do about it.
+
 ## Cruft-free guarantee
 
 There is exactly one SKILL.md in this repo and it is the boot skill. There are no
-extra skills bundled here by default. The repo is intentionally small; that is the
-design, not an omission.
+extra skills bundled here by default. `doctor.sh` is a verifier script, not a
+skill. The repo is intentionally small; that is the design, not an omission.
