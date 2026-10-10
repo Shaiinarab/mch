@@ -23,3 +23,6 @@ Thumbs.db
 # never commit anything that looks like an API key or token filename
 credentials/
 secrets/
+
+# deploy artifacts (generated, never committed)
+*.bundle

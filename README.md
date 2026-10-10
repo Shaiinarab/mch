@@ -3,6 +3,8 @@
 A MiMo Claw workspace drop for first-run rehydration of every new session.
 Short name for the public repo at `github.com/Shaiinarab/mch`.
 
+**Status:** active · machine-checked — `doctor.sh` + `test.sh` gate every change.
+
 **What it is:** one repo that, when installed into a MiMo Claw workspace, seeds
 `SOUL.md`, `AGENTS.md`, `USER.md`, `IDENTITY.md`, `MEMORY.md`, `PROMPT.md`,
 `BOOTSTRAP.md`, `HARNESS_VERSION`, a daily memory template, a boot SKILL.md
@@ -12,6 +14,29 @@ read-only verifier that the boot prompt runs in its verify step.
 **What it is not:** it is not a full app, not a config-manager, and not a skill
 bundle of 20 random verbs. It is the *identity + operating agreement + boot* for
 a MiMo Claw agent. Curated external skills belong on ClawHub, not in this repo.
+
+## Quickstart
+
+```bash
+git clone --depth 1 https://github.com/Shaiinarab/mch.git "${TMPDIR:-/tmp}/mch"
+sh "${TMPDIR:-/tmp}/mch/install.sh" "${TMPDIR:-/tmp}/mch" ~/.openclaw/workspace
+# then paste the repo's PROMPT.md as the first message of the session
+```
+
+What lands where after install:
+
+```
+~/.openclaw/workspace/
+├── SOUL.md AGENTS.md USER.md IDENTITY.md MEMORY.md   # judgment files (never clobbered)
+├── PROMPT.md HARNESS_VERSION                         # boot contract + version marker
+├── BOOTSTRAP.md                                      # first-run starter; gone after use
+├── skills/mch/{SKILL.md,doctor.sh,install.sh}        # boot skill + verifier + installer
+├── memory/<today>.md                                 # daily note (seeded when absent)
+└── .learnings/                                       # self-improvement log
+```
+
+Full install routes (A-D), update and verify rules below. Deploy handoff:
+`DEPLOY.md`.
 
 ## What goes where
 
@@ -112,6 +137,12 @@ session start.
 MiMo Claw free tier clears workspace data on a schedule and caps session length.
 Treat the workspace as disposable and idempotent. Do not keep secrets in these
 files. Keep durable memory in your own backed-up copy if you need it to survive.
+A one-file backup that survives the wipe:
+
+```bash
+git -C /path/to/mch bundle create ~/mch-$(date +%F).bundle --all   # full history
+# later, incrementally: git bundle create ~/mch-$(date +%F).bundle --all <last-tag>..main
+```
 
 ## Verifying
 

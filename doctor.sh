@@ -21,6 +21,7 @@
 #   7. no hidden/bidi/control characters in scanned markdown — warn only
 #   8. no stale BOOTSTRAP.md or stray root SKILL.md in installed workspaces —
 #      warn only
+#   9. AGENTS.md stays a map (<220 lines) — warn only
 #
 # Output: one "ok:/warn:/gap:" line per check, then a single machine-readable
 # summary line: DOCTOR <OK|PARTIAL|FAIL> version=<v> files=<n> gaps=<n> warns=<n>
@@ -134,6 +135,15 @@ elif [ -f "$ROOT/skills/mch/SKILL.md" ]; then
     : # installed layout: template is intentionally not required
 else
     warn "memory template memory/mch.md.example not found"
+fi
+
+if [ -f "$ROOT/AGENTS.md" ]; then
+    an=$(wc -l < "$ROOT/AGENTS.md" | tr -d ' ')
+    if [ "$an" -gt 220 ]; then
+        warn "AGENTS.md is $an lines (>220): keep it the map, move detail to docs/"
+    else
+        ok "AGENTS.md within map budget ($an lines)"
+    fi
 fi
 
 # --- 6. content scans (warn only) ---------------------------------------------

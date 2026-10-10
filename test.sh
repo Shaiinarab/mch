@@ -106,6 +106,21 @@ check "doctor warns on hidden characters" sh -c \
     "sh '$REPO/doctor.sh' '$ws' | grep -Eiq '^warn: .*hidden'"
 rm -f "$ws/memory/evil.md"
 
+# --- 8. repo self-consistency ------------------------------------------------
+check "exactly one SKILL.md in the repo" sh -c \
+    "[ \"\$(find '$REPO' -name SKILL.md -not -path '*/.git/*' | wc -l)\" -eq 1 ]"
+check "repo-layout doctor passes" sh "$REPO/doctor.sh" "$REPO"
+check "CHANGELOG covers the current version ($fv)" grep -q "## $fv" "$REPO/CHANGELOG.md"
+cp "$REPO/AGENTS.md" "$ws/AGENTS.md"
+for _n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25; do
+    echo "padding line to push AGENTS.md past the map budget for the warn fixture" >> "$ws/AGENTS.md"
+done
+i=0
+while [ "$i" -lt 10 ]; do cat "$ws/AGENTS.md" >> "$ws/AGENTS.md.tmp"; i=$((i + 1)); done
+mv "$ws/AGENTS.md.tmp" "$ws/AGENTS.md"
+check "doctor warns on oversized AGENTS.md" sh -c \
+    "sh '$REPO/doctor.sh' '$ws' | grep -Eiq '^warn: .*AGENTS.md is'"
+
 if [ "$failures" -gt 0 ]; then
     status=FAIL
 else
