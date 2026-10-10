@@ -179,3 +179,40 @@ runs it explicitly.
 - Last-Seen: 2026-10-10
 
 ---
+
+## [LRN-20261010-006] knowledge_gap
+
+**Logged**: 2026-10-10T23:45:00+08:00
+**Priority**: medium
+**Status**: promoted
+**Area**: docs
+
+### Summary
+Harness docs assumed a simpler memory model than the platform implements
+(slugged daily files, MEMORY.md injection budget, dreaming/active-memory/hook
+layers), and SOUL.md risked becoming a policy dump contrary to platform guidance.
+
+### Details
+Deep research against openclaw/docs showed: `memory/YYYY-MM-DD-<slug>.md` is
+loaded alongside date-only files; MEMORY.md is injected with a budget and
+truncated in context when over; DREAMS.md/dreaming, active-memory, and session
+hooks are opt-in layers; and `concepts/soul.md` explicitly rejects security
+policy in SOUL.md. Skill descriptions are the only preloaded discovery surface,
+so they must carry trigger words.
+
+### Suggested Action
+Promoted in v0.4.0: memory rules rewritten (AGENTS.md), file-responsibility split
+(README "What goes where"), skill description with triggers (SKILL.md), platform
+features section (README), research record (docs/openclaw-fit.md).
+
+### Metadata
+- Source: conversation (deep research)
+- Related Files: AGENTS.md, README.md, SKILL.md, docs/openclaw-fit.md
+- Tags: memory-model, platform-fit, skill-metadata
+- See Also: LRN-20261010-005
+- Pattern-Key: docs.platform_model_gap
+- Recurrence-Count: 1
+- First-Seen: 2026-10-10
+- Last-Seen: 2026-10-10
+
+---

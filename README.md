@@ -13,6 +13,17 @@ read-only verifier that the boot prompt runs in its verify step.
 bundle of 20 random verbs. It is the *identity + operating agreement + boot* for
 a MiMo Claw agent. Curated external skills belong on ClawHub, not in this repo.
 
+## What goes where
+
+The file split is deliberate (platform guidance: `concepts/soul.md`):
+
+- `SOUL.md` — voice: tone, opinions, boundaries. Never a security-policy dump.
+- `AGENTS.md` — conventions, operating policy, security rules, workflows.
+- `USER.md` — stable user preferences (profile facts, no secrets).
+- `MEMORY.md` — compact curated memory, injected at session start with a budget;
+  detail lives in `memory/YYYY-MM-DD[-slug].md`.
+- `PROMPT.md` — the boot contract, pasted as the first message of a fresh session.
+
 ## Model
 
 MiMo Claw runs **mimo-v2.6-pro** (not MiMo Auto). Model reality:
@@ -108,6 +119,19 @@ sh doctor.sh ./some-workspace                        # check an explicit directo
 It checks required root files, boot-skill frontmatter, and that `HARNESS_VERSION`
 matches the `harness-version` embedded in `SKILL.md`, then prints one
 machine-readable line: `DOCTOR <OK|PARTIAL|FAIL> version=<v> files=<n> gaps=<n> warns=<n>`.
+Platform-level health is separate: `openclaw doctor` (extra workspaces,
+truncation, config) is the operator's check; `doctor.sh` is this harness's check.
+
+## Platform features this harness names but never touches
+
+MiMo Claw provides optional layers; enabling them is the user's `openclaw.json`
+choice and this repo never edits it:
+
+- **dreaming** — opt-in background memory consolidation into `MEMORY.md` + `DREAMS.md`
+- **active-memory** — opt-in pre-reply memory recall plugin
+- **session hooks** — e.g. `openclaw hooks enable session-memory` for `/new` snapshots
+
+See `docs/openclaw-fit.md` for the research behind the file split and memory model.
 
 ## Updating
 

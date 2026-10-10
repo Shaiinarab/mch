@@ -1,12 +1,13 @@
 ---
 name: mch
 description: >
-  MiMo Claw workspace bootstrap: SOUL/AGENTS/USER/IDENTITY + rehydration
-  SKILL.md + daily memory template for every new MiMo Claw session. Model-aware:
-  mimo-v2.6-pro, tool-call repetition guard, ≤6 parallel tools, deep thinking off
-  on I/O. Install by clone or raw-fetch or openclaw skills install.
+  MiMo Claw workspace bootstrap and first-run rehydration: seeds SOUL/AGENTS/
+  USER/IDENTITY/MEMORY/PROMPT/BOOTSTRAP, the boot skill, doctor.sh, and the daily
+  memory template. Use when: a session starts fresh, workspace files are missing
+  or stale, the user pastes the boot prompt (PROMPT.md), or a harness version
+  check is needed. Install by git clone, raw fetch, or openclaw skills install.
 user-invocable: true
-harness-version: 0.3.0
+harness-version: 0.4.0
 metadata:
   openclaw:
     requires:

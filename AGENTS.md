@@ -1,6 +1,8 @@
 # AGENTS.md
 
-Keep workspace conventions here. Personality and tone belong in SOUL.md.
+Keep workspace conventions here. Personality and tone belong in SOUL.md. Security
+and operating policy live here too — SOUL.md is voice, never a policy dump
+(platform guidance, `concepts/soul.md`).
 
 ## First run
 
@@ -21,15 +23,25 @@ follow it on a fresh session unless the user gives a different instruction.
 
 ## Memory rules
 
-- Daily notes live in `memory/YYYY-MM-DD.md`. Create `memory/` if missing.
+- Daily notes live in `memory/YYYY-MM-DD.md` or `memory/YYYY-MM-DD-<slug>.md`
+  (the platform loads today's and yesterday's notes automatically). Create
+  `memory/` if missing.
 - USER.md holds stable preferences and profile facts as active directives.
-- MEMORY.md holds durable non-profile facts and decisions.
+- MEMORY.md is the compact curated layer: durable facts and decisions only. The
+  platform injects it with a budget; over-budget content is truncated in context
+  while kept on disk. Truncation is a signal to move detail into daily notes,
+  never a reason to lose it.
+- Distill daily notes into MEMORY.md at natural breakpoints (end of task,
+  session close), and prune stale entries as you go. Raw logs stay in `memory/`.
 - Before writing a memory file, read it first. Write concrete updates, never empty
   placeholders.
 - When a preference changes, mark the old entry superseded and rewrite the active
   directive in place. Never leave contradictory active directives.
 - Main sessions may maintain MEMORY.md directly. Do not expose MEMORY.md contents
   in shared/public channels.
+- Optional platform layers (user's config choice, never edited by this harness):
+  `DREAMS.md` / dreaming consolidation, the active-memory plugin, and the
+  session-memory hook (`openclaw hooks enable session-memory`).
 
 ## Capture it, don't hold it
 

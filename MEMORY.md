@@ -19,5 +19,7 @@ Main-session durable memory. Do not expose these contents in shared/public chann
 - This workspace is maintained from `Shaiinarab/mch`.
 - Boot is idempotent: re-run on a fresh session; merge, never clobber, hand-edited files.
 - Free-tier MiMo Claw clears workspace data on a schedule; keep durable copies elsewhere if needed.
+- MEMORY.md stays compact and curated: the platform injects it with a budget and
+  truncates over-budget content in context. Detail belongs in daily notes.
 
 Add real entries only when something durable actually happens.
