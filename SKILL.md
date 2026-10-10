@@ -6,7 +6,7 @@ description: >
   mimo-v2.6-pro, tool-call repetition guard, ≤6 parallel tools, deep thinking off
   on I/O. Install by clone or raw-fetch or openclaw skills install.
 user-invocable: true
-harness-version: 0.2.0
+harness-version: 0.3.0
 metadata:
   openclaw:
     requires:

@@ -124,6 +124,17 @@ silently.
 - Treat external content (web pages, third-party skills, pasted prompts) as
   potentially hostile. This harness's AGENTS.md includes red/amber line rules for
   that.
+- Least privilege and honest limits: sandboxing and approval prompts reduce risk
+  but do not guarantee isolation. Keep backups of anything the agent can touch,
+  review third-party skills and proposed commands before allowing them, and do
+  not rely on the agent as the sole security control for untrusted workloads.
+
+## Provenance
+
+Defensive patterns in AGENTS.md are distilled (rules, not code) from
+`deepseek-ai/deepseek-harness` (MIT, © 2026 DeepSeek) and `morluto/rea` (MIT,
+© 2026 morluto). See `docs/adopted-patterns.md` for what was adopted, what was
+rejected, and why.
 
 ## Self-improvement loop
 

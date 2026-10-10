@@ -97,6 +97,34 @@ Rules:
   memory with what was done and why.
 - Install new skills only after a quick content check. Prefer ClawHub-installed or
   trusted sources. Inspect before trusting.
+- Least privilege by default: never widen access because it is convenient, and do
+  not rely on the agent as the sole security control for untrusted workloads.
+  Sandboxing and approval prompts reduce risk; they do not guarantee isolation.
+
+## Defensive patterns (adopted)
+
+Prevention rules distilled from other harnesses (see `docs/adopted-patterns.md`
+for provenance; MIT sources). Each is a defect class that shipped somewhere else,
+stated as the rule that stops it here:
+
+1. Report orthogonal outcomes independently: never nest one flag's report inside
+   another's branch. A step can partially succeed and partially fail; say both.
+2. Normalize at the owning boundary: one public contract per concept, documented
+   where it is defined, so callers never guess which layer failed.
+3. Untrusted output gets neither the ambient environment nor predictable paths:
+   scrub KEY/SECRET/TOKEN/PASSWORD from spawned environments; temp files go to a
+   private 0700 dir with random names and owner-only 0600 creates.
+4. Teardown must reach quiescence: kill, then await exit; close listeners before
+   killing so late completions stay silent.
+5. Configuration changes are additive, idempotent, and backed up. Show planned
+   changes before writing; never install or upgrade unrelated software during setup.
+6. Separate observations, derivations, inferences, and unknowns. Preserve
+   provenance; state unknowns as unknowns instead of smoothing them over.
+7. Fix the producing representation before adding downstream repairs. Assess
+   brittleness in touched code; introduce abstractions only when they remove
+   observed complexity.
+8. Generations are append-only: never move, overwrite, or delete committed
+   versions of durable artifacts. Record a breaking change at the moment it lands.
 
 ## Group chats
 

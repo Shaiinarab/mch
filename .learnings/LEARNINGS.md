@@ -115,6 +115,39 @@ root files so drift is caught mechanically, not by reading.
 
 ---
 
+## [LRN-20261010-005] best_practice
+
+**Logged**: 2026-10-10T23:25:00+08:00
+**Priority**: medium
+**Status**: promoted
+**Area**: infra
+
+### Summary
+Other open-source harnesses (deepseek-ai/deepseek-harness, morluto/rea) encode
+their shipped-defect lessons as terse prevention rules; mch had no such layer.
+
+### Details
+Both MIT sources keep "defensive patterns" as one-line rules per defect class,
+written where agents will read them before touching lifecycle/concurrency code.
+mch's self-improvement loop had a promotion target (AGENTS.md) but no promoted
+content yet.
+
+### Suggested Action
+Promoted into AGENTS.md "Defensive patterns (adopted)" + docs/adopted-patterns.md
+(provenance, rejections). Version bumped to 0.3.0.
+
+### Metadata
+- Source: conversation (cross-repo extraction)
+- Related Files: AGENTS.md, docs/adopted-patterns.md
+- Tags: defensive-patterns, provenance
+- See Also: LRN-20261010-004
+- Pattern-Key: promote.defensive_rules_from_peers
+- Recurrence-Count: 1
+- First-Seen: 2026-10-10
+- Last-Seen: 2026-10-10
+
+---
+
 ## [LRN-20261010-004] best_practice
 
 **Logged**: 2026-10-10T22:59:00+08:00
