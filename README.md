@@ -44,15 +44,19 @@ Three routes, tried in order by the boot prompt. Install once per workspace.
 
 ```bash
 git clone --depth 1 https://github.com/Shaiinarab/mch.git "${TMPDIR:-/tmp}/mch"
-src="${TMPDIR:-/tmp}/mch"
-cp "$src"/{SOUL,AGENTS,USER,IDENTITY,MEMORY,PROMPT,BOOTSTRAP}.md ~/.openclaw/workspace/
-cp "$src"/HARNESS_VERSION ~/.openclaw/workspace/
-mkdir -p ~/.openclaw/workspace/skills/mch
-cp "$src"/{SKILL.md,doctor.sh} ~/.openclaw/workspace/skills/mch/
-# memory/mch.md.example -> memory/<today>.md only when today's file is absent
-# keep memory/ and any USER.md/MEMORY.md you already wrote
+sh "${TMPDIR:-/tmp}/mch/install.sh" "${TMPDIR:-/tmp}/mch" ~/.openclaw/workspace
 ```
 
+`install.sh` is idempotent: repo-owned files (PROMPT/BOOTSTRAP/HARNESS_VERSION/
+skills/mch/*) are mirrored on every run; SOUL/AGENTS/USER/IDENTITY/MEMORY and
+`.learnings/` are written only when absent — a differing existing file is never
+overwritten, only reported as a conflict for a judgment merge. It prints one
+`INSTALL <OK|PARTIAL> version=<v> written=<n> skipped=<n> conflicts=<n>` line.
+
+Manual route (no script execution): copy the same manifest yourself —
+`{SOUL,AGENTS,USER,IDENTITY,MEMORY,PROMPT,BOOTSTRAP}.md` + `HARNESS_VERSION` to
+the workspace root, `SKILL.md`/`doctor.sh`/`install.sh` to `skills/mch/`, and
+seed `memory/<today>.md` from `memory/mch.md.example` only when absent.
 If the harness forbids /tmp, stage the clone under `<workspace>/.openclaw/tmp/`
 instead.
 
@@ -132,6 +136,18 @@ choice and this repo never edits it:
 - **session hooks** — e.g. `openclaw hooks enable session-memory` for `/new` snapshots
 
 See `docs/openclaw-fit.md` for the research behind the file split and memory model.
+
+## Developing
+
+Before shipping a change to this repo:
+
+```bash
+sh test.sh    # idempotency, preservation, conflict-report, version lockstep
+sh doctor.sh . # repo-layout verification
+```
+
+Version rule: `HARNESS_VERSION` and the `harness-version` frontmatter key move
+in lockstep in the same commit; `test.sh` fails the build otherwise.
 
 ## Updating
 

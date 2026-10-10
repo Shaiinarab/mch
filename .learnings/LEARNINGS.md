@@ -216,3 +216,38 @@ features section (README), research record (docs/openclaw-fit.md).
 - Last-Seen: 2026-10-10
 
 ---
+
+## [LRN-20261010-007] best_practice
+
+**Logged**: 2026-10-10T23:58:00+08:00
+**Priority**: high
+**Status**: resolved
+**Area**: infra
+
+### Summary
+Install and idempotency were enforced by prose only ("re-running must not
+duplicate or corrupt files"); no artifact could prove it.
+
+### Details
+Same defect class as LRN-20261010-004 (verification without a tool). A boot
+rule that depends on agent diligence is not a rule. Deterministic mechanics
+can and should be scripts; judgment (merge vs clobber) stays with the agent but
+is now bounded by a policy the script enforces: repo-owned files mirror,
+judgment files are never overwritten, conflicts are reported.
+
+### Suggested Action
+Done in v0.5.0: install.sh (idempotent installer, INSTALL report line), test.sh
+(10 checks incl. byte-identical second run, user-content survival, conflict
+reporting, version lockstep), wired into PROMPT.md route A and README.
+
+### Metadata
+- Source: conversation
+- Related Files: install.sh, test.sh, PROMPT.md, README.md
+- Tags: idempotency, tooling, install
+- See Also: LRN-20261010-004
+- Pattern-Key: harden.prose_only_mechanics
+- Recurrence-Count: 2
+- First-Seen: 2026-10-10
+- Last-Seen: 2026-10-10
+
+---

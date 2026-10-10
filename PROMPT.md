@@ -10,7 +10,9 @@ List the workspace root. Read HARNESS_VERSION if present.
 Classify: MISSING (no harness) | STALE (version differs) | CURRENT (matches) → continue to STEP 1.
 
 STEP 1 — acquire (try in order, stop at the first route that works):
- A) shell/git available: git clone --depth 1 https://github.com/Shaiinarab/mch.git "${TMPDIR:-/tmp}/mch" (if the harness forbids /tmp, stage under <workspace>/.openclaw/tmp/mch instead), then copy files into ~/.openclaw/workspace/, preserving any USER.md/MEMORY.md/hand-edited files you already own.
+ A) shell/git available: git clone --depth 1 https://github.com/Shaiinarab/mch.git "${TMPDIR:-/tmp}/mch" (if the harness forbids /tmp, stage under <workspace>/.openclaw/tmp/mch instead), then run the idempotent installer:
+    sh "${TMPDIR:-/tmp}/mch/install.sh" "${TMPDIR:-/tmp}/mch" ~/.openclaw/workspace
+    It preserves USER.md/MEMORY.md/hand-edited files, reports conflicts, and is safe to re-run.
  B) openclaw CLI available: openclaw skills install git:Shaiinarab/mch@main, then fetch the root workspace files (SOUL.md, AGENTS.md, USER.md, IDENTITY.md, MEMORY.md, PROMPT.md) from raw.githubusercontent.com into ~/.openclaw/workspace/.
  C) network/raw-fetch only: fetch each needed path from
     https://raw.githubusercontent.com/Shaiinarab/mch/main/<path>
@@ -20,9 +22,13 @@ STEP 1 — acquire (try in order, stop at the first route that works):
 STEP 2 — install layout (merge, never clobber hand-edited files):
  SOUL.md, AGENTS.md, IDENTITY.md, USER.md, MEMORY.md, PROMPT.md, BOOTSTRAP.md,
  HARNESS_VERSION                                        → workspace root
- SKILL.md, doctor.sh                                    → workspace/skills/mch/
+ SKILL.md, doctor.sh, install.sh                        → workspace/skills/mch/
  memory/mch.md.example                                  → memory/<today YYYY-MM-DD>.md only if today's file is absent
-Files I already have that are newer win; report any conflict instead of deciding silently.
+ install.sh enforces this policy: repo-owned files are mirrored on every run; a
+ differing SOUL/AGENTS/USER/IDENTITY/MEMORY/.learnings file is never overwritten,
+ only reported as a conflict to be merged with judgment. If a route other than A
+ installed the files, apply the same policy by hand and report conflicts instead
+ of deciding silently.
 
 STEP 3 — verify (this is the point of the run):
  Run the doctor: sh ~/.openclaw/workspace/skills/mch/doctor.sh (fallback: sh <repo>/doctor.sh) and include its full output ending in the DOCTOR <status> line.
